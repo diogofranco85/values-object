@@ -1,5 +1,11 @@
 export { ValuesObjectError } from "./common/errors/values-object.error.js";
 export { InvalidCPFError } from "./common/errors/invalid-cpf.error.js";
 export { InvalidCNPJError } from "./common/errors/invalid-cnpj.error.js";
+export { InvalidBooleanError } from "./common/errors/invalid-boolean.error.js";
+export { InvalidPositiveNumberError } from "./common/errors/invalid-positive-number.error.js";
+export { InvalidCEPError } from "./common/errors/invalid-cep.error.js";
 export { CPF } from "./values-objects/cpf/object.js";
 export { CNPJ } from "./values-objects/cnpj/object.js";
+export { BooleanValue } from "./values-objects/boolean/object.js";
+export { PositiveNumber } from "./values-objects/positive-number/object.js";
+export { CEP } from "./values-objects/cep/object.js";
