@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ValueObject } from "./value-object.abstract.js";
+import { ValueObject } from "../../src/common/value-object.abstract.js";
 
 type TestProps = {
   value: string;

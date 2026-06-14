@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { InvalidCPFError, ValuesObjectError } from "../../index.js";
-import { CPF } from "./object.js";
+import { CPF, InvalidCPFError, ValuesObjectError } from "../../../src/index.js";
 
 describe("CPF", () => {
   describe("validate", () => {
@@ -23,6 +22,14 @@ describe("CPF", () => {
 
     it("rejeita dígitos verificadores inválidos", () => {
       expect(CPF.validate("39053344700")).toBe(false);
+    });
+
+    it("rejeita caracteres inválidos", () => {
+      expect(CPF.validate("39053344705abc")).toBe(false);
+      expect(CPF.validate("3905334470A")).toBe(false);
+      expect(CPF.validate("390.533.447/05")).toBe(false);
+      expect(CPF.validate("390-533-447-05")).toBe(false);
+      expect(CPF.validate("390.533447-05")).toBe(false);
     });
   });
 

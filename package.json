@@ -14,7 +14,12 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "docs:dev": "cd documentation && mintlify dev",
+    "docs:install": "mintlify install",
+    "prebuild": "rm -rf dist",
+    "build:watch": "tsup watch",
+    "build:prod": "tsup src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +28,9 @@
   "devDependencies": {
     "@types/node": "^25.9.3",
     "@vitest/coverage-v8": "^4.1.8",
+    "mintlify": "^4.2.616",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   }

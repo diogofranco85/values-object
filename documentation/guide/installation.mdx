@@ -1,0 +1,62 @@
+---
+title: Installation
+description: How to install and configure @frani/values-object
+---
+
+## Install the package
+
+<CodeGroup>
+
+```bash npm
+npm install @frani/values-object
+```
+
+```bash pnpm
+pnpm add @frani/values-object
+```
+
+```bash yarn
+yarn add @frani/values-object
+```
+
+</CodeGroup>
+
+## Requirements
+
+- Node.js 18+
+- TypeScript 5+ (recommended for TS projects)
+- ESM (`"type": "module"`) or a compatible bundler
+
+## Import
+
+```typescript
+import {
+  CPF,
+  CNPJ,
+  ValuesObjectError,
+  InvalidCPFError,
+  InvalidCNPJError,
+} from "@frani/values-object";
+```
+
+## Local development
+
+To contribute or test the library locally:
+
+```bash
+git clone https://github.com/frani/values-object.git
+cd values-object
+npm install
+npm run build
+npm test
+```
+
+## Local documentation
+
+To preview this documentation with Mintlify:
+
+```bash
+npm run docs:dev
+```
+
+Documentation will be available at `http://localhost:3000`.
