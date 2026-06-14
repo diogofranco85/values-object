@@ -27,6 +27,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@9.15.9",
   "type": "module",
   "devDependencies": {
     "@types/node": "^25.9.3",
