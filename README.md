@@ -2,6 +2,10 @@
 
 TypeScript library of **value objects** for validating Brazilian documents. It encapsulates formatting rules, normalization, and check-digit validation into safe, reusable types.
 
+## pipeline
+
+[![CI](https://github.com/diogofranco85/values-object/actions/workflows/ci.yml/badge.svg)](https://github.com/diogofranco85/values-object/actions/workflows/ci.yml)
+
 ## Features
 
 - **CPF** — numeric validation with optional mask (`XXX.XXX.XXX-XX`) and modulo 11 check digits
