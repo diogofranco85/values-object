@@ -1,0 +1,84 @@
+---
+title: Errors
+description: Custom error hierarchy for the library
+icon: triangle-exclamation
+---
+
+## Overview
+
+The library throws typed errors so client applications can identify the source of failures using `instanceof` or the `code` field.
+
+## Hierarchy
+
+```
+Error
+└── ValuesObjectError
+    ├── InvalidCPFError
+    └── InvalidCNPJError
+```
+
+## `ValuesObjectError`
+
+Base error for all value objects.
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `message` | `string` | Descriptive message |
+| `code` | `string` | Error identifier code |
+| `name` | `string` | Error class name |
+
+```typescript
+import { ValuesObjectError } from "@frani/values-object";
+
+if (error instanceof ValuesObjectError) {
+  console.log(error.code);
+}
+```
+
+## `InvalidCPFError`
+
+| Property | Value |
+| --- | --- |
+| `code` | `"INVALID_CPF"` |
+| `message` | `"CPF inválido"` |
+| `value` | Original value passed to `create` |
+
+## `InvalidCNPJError`
+
+| Property | Value |
+| --- | --- |
+| `code` | `"INVALID_CNPJ"` |
+| `message` | `"CNPJ inválido"` |
+| `value` | Original value passed to `create` |
+
+<Note>
+  Error messages remain in Portuguese to match the library runtime. Use `code` for localization in your application.
+</Note>
+
+## Full example
+
+```typescript
+import {
+  CPF,
+  CNPJ,
+  ValuesObjectError,
+  InvalidCPFError,
+  InvalidCNPJError,
+} from "@frani/values-object";
+
+function handleDocument(value: string, type: "cpf" | "cnpj") {
+  try {
+    return type === "cpf" ? CPF.create(value) : CNPJ.create(value);
+  } catch (error) {
+    if (error instanceof InvalidCPFError || error instanceof InvalidCNPJError) {
+      return { ok: false, code: error.code, value: error.value };
+    }
+
+    if (error instanceof ValuesObjectError) {
+      return { ok: false, code: error.code };
+    }
+
+    throw error;
+  }
+}
+```

@@ -13,20 +13,26 @@ export class CPF extends ValueObject<CPFProps> {
     Array.from({ length: 10 }, (_, digit) => String(digit).repeat(this.LENGTH)),
   );
 
-  public static create(value: string): CPF {
-    const normalized = this.normalize(value);
+  private static readonly FORMATTED_PATTERN = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 
-    if (!this.validate(normalized)) {
+  private static readonly UNFORMATTED_PATTERN = /^\d{11}$/;
+
+  public static create(value: string): CPF {
+    if (!this.validate(value)) {
       throw new InvalidCPFError(value);
     }
 
-    return new CPF({ value: normalized });
+    return new CPF({ value: this.normalize(value) });
   }
 
   public static validate(value: string): boolean {
+    if (!this.hasValidCharacters(value)) {
+      return false;
+    }
+
     const normalized = this.normalize(value);
 
-    if (!/^\d{11}$/.test(normalized)) {
+    if (!this.UNFORMATTED_PATTERN.test(normalized)) {
       return false;
     }
 
@@ -37,8 +43,17 @@ export class CPF extends ValueObject<CPFProps> {
     return this.hasValidCheckDigits(normalized);
   }
 
+  private static hasValidCharacters(value: string): boolean {
+    const trimmed = value.trim();
+
+    return (
+      this.FORMATTED_PATTERN.test(trimmed) ||
+      this.UNFORMATTED_PATTERN.test(trimmed)
+    );
+  }
+
   private static normalize(value: string): string {
-    return value.replace(/\D/g, '');
+    return value.trim().replace(/\D/g, "");
   }
 
   private static hasValidCheckDigits(value: string): boolean {

@@ -1,0 +1,84 @@
+---
+title: CNPJ
+description: Value object for numeric and alphanumeric CNPJ validation
+icon: building
+---
+
+## Overview
+
+`CNPJ` validates Brazilian company registry numbers with support for:
+
+- **Legacy format** — 14 numeric digits (existing CNPJs)
+- **New alphanumeric format** — 12 alphanumeric characters + 2 numeric check digits (from July 2026)
+
+Both formats **coexist** in the same validator.
+
+## Accepted formats
+
+| Format | Example |
+| --- | --- |
+| Unformatted (alphanumeric) | `12ABC34501DE35` |
+| Masked (alphanumeric) | `12.ABC.345/01DE-35` |
+| Unformatted (legacy) | `11222333000181` |
+| Masked (legacy) | `11.222.333/0001-81` |
+
+### Alphanumeric structure
+
+```
+AA.AAA.AAA/AAAA-DV
+│  root (8)  │branch│ DV
+             (4)    (2)
+```
+
+- **Positions 1–12:** `0-9` and `A-Z` (normalized to uppercase)
+- **Positions 13–14:** numeric check digits only
+
+## API
+
+### `CNPJ.create(value: string): CNPJ`
+
+```typescript
+const cnpj = CNPJ.create("12.ABC.345/01DE-35");
+
+cnpj.value; // "12ABC34501DE35"
+```
+
+Throws `InvalidCNPJError` when the value is invalid.
+
+### `CNPJ.validate(value: string): boolean`
+
+```typescript
+CNPJ.validate("12.ABC.345/01DE-35"); // true
+CNPJ.validate("11.222.333/0001-81"); // true
+CNPJ.validate("12abc34501de35");       // true (uppercases letters)
+CNPJ.validate("00000000000000");       // false
+```
+
+## Check-digit algorithm
+
+According to the Receita Federal / SERPRO manual:
+
+1. Convert each character to a numeric value: `charCodeAt(0) - 48`
+   - `0` → 0, `9` → 9, `A` → 17, `B` → 18, …
+2. Apply weights **2 to 9** from right to left (restarts after the 8th character)
+3. Compute `sum % 11`
+4. If remainder is `0` or `1`, check digit = `0`; otherwise, check digit = `11 - remainder`
+
+<Info>
+  Official example: `12.ABC.345/01DE-35` — base `12ABC34501DE`, check digits `3` and `5`.
+</Info>
+
+## Error handling
+
+```typescript
+import { CNPJ, InvalidCNPJError } from "@frani/values-object";
+
+try {
+  CNPJ.create("00000000000000");
+} catch (error) {
+  if (error instanceof InvalidCNPJError) {
+    console.log(error.code);  // "INVALID_CNPJ"
+    console.log(error.value); // "00000000000000"
+  }
+}
+```

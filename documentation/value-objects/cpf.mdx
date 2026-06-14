@@ -1,0 +1,70 @@
+---
+title: CPF
+description: Value object for validating Brazilian CPF documents
+icon: id-card
+---
+
+## Overview
+
+`CPF` validates Brazilian individual taxpayer registry numbers: **11 numeric digits** with **modulo 11** check-digit verification.
+
+## Accepted formats
+
+| Format | Example |
+| --- | --- |
+| Unformatted | `39053344705` |
+| Masked | `390.533.447-05` |
+
+<Warning>
+  Only digits and the official mask are accepted. Letters, slashes, or hyphens outside the standard pattern are rejected **before** normalization.
+</Warning>
+
+## API
+
+### `CPF.create(value: string): CPF`
+
+Creates a validated instance. Normalizes input by removing the mask.
+
+```typescript
+const cpf = CPF.create("390.533.447-05");
+
+cpf.value; // "39053344705"
+```
+
+Throws `InvalidCPFError` when the value is invalid.
+
+### `CPF.validate(value: string): boolean`
+
+Validates without creating an instance. Returns `true` or `false`.
+
+```typescript
+CPF.validate("39053344705");      // true
+CPF.validate("390.533.447-05");   // true
+CPF.validate("11111111111");      // false
+CPF.validate("39053344705abc");   // false
+```
+
+## Validation rules
+
+1. **Characters** — only `XXX.XXX.XXX-XX` or 11 digits
+2. **Invalid sequences** — rejects `00000000000`, `11111111111`, etc.
+3. **Check digits** — official Receita Federal algorithm (modulo 11)
+
+## Error handling
+
+```typescript
+import { CPF, InvalidCPFError, ValuesObjectError } from "@frani/values-object";
+
+try {
+  CPF.create(input);
+} catch (error) {
+  if (error instanceof InvalidCPFError) {
+    console.log(error.code);  // "INVALID_CPF"
+    console.log(error.value); // user-provided value
+  } else if (error instanceof ValuesObjectError) {
+    // another library error
+  }
+}
+```
+
+See [Errors](/references/errors) for more details.
